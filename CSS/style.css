@@ -1,0 +1,17 @@
+:root{
+    --color-gray: rgb(245, 244, 244);
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Custom Class */
+.bg-gray {
+    background-color: var(--color-gray); 
+}
+
+/* .mh-250 {
+    min-height: 250px;
+    max-height: 250px;
+} */

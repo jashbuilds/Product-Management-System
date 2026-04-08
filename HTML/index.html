@@ -3,12 +3,83 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Product Management System</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+            crossorigin="anonymous">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+            rel="stylesheet">
+        <link rel="stylesheet" href="../CSS/style.css">
+        <link rel="shortcut icon" href="../Images/backlog.png"
+            type="image/x-icon">
         <script src="https://unpkg.com/axios@1.13.2/dist/axios.min.js"></script>
+        <title>Product Management System</title>
     </head>
     <body>
-        <img id="dummyImg"></img>
-        
+        <!-- <form action="#" id="form">
+            <label for="id">Id:</label>
+            <input type="number" min="0" id="id" required> <br>
+
+            <label for="name">Name:</label>
+            <input type="text" id="name" required> <br>
+
+            <label for="desc">Description:</label>
+            <input type="text" id="desc" required> <br>
+
+            <label for="price">Price:</label>
+            <input type="number" min="0" id="price" required> <br>
+
+            <label for="category">Category:</label>
+            <select name="category" id="category">
+                <option value selected></option>
+                <option value="Electronics">Electronics</option>
+                <option value="Stationary">Stationary</option>
+                <option value="Gym_Equipments">Gym-Equipments</option>
+            </select> <br> <br>
+
+            <button type="submit">Submit</button>
+        </form> -->
+
+        <!-- NavBar -->
+        <nav class="navbar navbar-expand-sm sticky-top shadow-sm bg-gray">
+            <div
+                class="container-fluid d-flex justify-content-sm-start justify-content-center align-items-center gap-3 my-2 mx-3">
+                <a class="navbar-brand m-0" href="#">
+                    <img src="../Images/data-analysis.png"
+                        alt="product-management-logo"
+                        width="40" height="40">
+                </a>
+                <div class="d-flex flex-column justify-content-center">
+                    <span
+                        class="fw-medium fs-5 text-wrap text-center text-sm-start">Product
+                        Management System</span>
+                    <span
+                        class="text-secondary fs-6 text-wrap text-center text-sm-start">Chaos,
+                        Organized.</span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main>
+            <div class="d-flex justify-content-end mx-3 my-4">
+                <button
+                    class="btn btn-secondary border border-0 rounded-3 py-2 d-flex gap-2 justify-content-center align-items-center"><img
+                        src="../Icons/add-icon.svg" alt="add-icon"
+                        width="18" height="18">Add Product</button>
+            </div>
+
+            <section class="container my-5">
+                <div class="row d-flex gy-4" id="productGrid">
+                    <!-- Card html structure -->
+                </div>
+            </section>
+        </main>
+
         <script src="https://unpkg.com/axios@1.13.2/dist/axios.min.js"></script>
         <script src="../JavaScript/script.js"></script>
     </body>
