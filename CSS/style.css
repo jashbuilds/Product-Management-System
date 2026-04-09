@@ -1,6 +1,7 @@
 :root {
     --color-gray: rgb(245, 244, 244);
-    --color-primary: #777877;
+    /* --color-primary: #777877; */
+    --color-primary: #0dcaf0;
     --color-white: white;
     --color-primary-shadow: rgba(78, 184, 140, 0.3);
     --color-primary-hover-shadow: rgba(60, 165, 122, 0.4);
@@ -17,12 +18,16 @@ body {
     font-family: 'Montserrat', sans-serif;
 }
 
+.navbar{
+    backdrop-filter: blur(15px);
+}
+
 .mainContent .addBtn {
     transition: all 0.3s ease;
 }
 
 .mainContent .addBtn:hover {
-    transform: scale(1) translateY(-1px);
+    transform: scale(1) translateY(-2px);
 }
 
 .mainContent .productCard {
@@ -92,5 +97,13 @@ body {
 }
 
 .delete-icon:hover{
+    transform: scale(1) translateY(-1px);
+}
+
+.deleteBtn {
+    transition: all 0.2s ease-in-out;
+}
+
+.deleteBtn:hover{
     transform: scale(1) translateY(-1px);
 }

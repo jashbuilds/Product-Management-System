@@ -35,6 +35,9 @@
 //   myInput.focus()
 // })
 
+{/* <img src="../Icons/delete-icon.svg" alt="delete-icon" class="cursor-pointer delete-icon" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" onclick="confirmProductDelete('${product.id}')"> */}
+
+
 const productId = document.getElementById("productId");
 const productName = document.getElementById("productName");
 const productDesc = document.getElementById("productDesc");
@@ -44,9 +47,9 @@ const productStock = document.getElementById("productStock");
 
 const productGrid = document.getElementById("productGrid");
 const submitBtn = document.getElementById("submitBtn");
-const addProductModal = document.getElementById("addProduct");
+const addOrUpdateProduct = document.getElementById("addOrEditProductModal");
 
-let editingIndex = -1
+let editingId = null;
 
 const products = [
   {
@@ -90,23 +93,28 @@ const renderProducts = () => {
       (product) =>
         `
        <div class="col-12 col-lg-3 col-md-6 d-flex justify-content-center align-items-center">
-          <div class="card productCard w-100 border rounded-4 h-auto shadow-sm">
+          <div class="card productCard w-100 border rounded-4 h-auto shadow-sm mx-sm-1 mx-2">
             <div class="card-header border-bottom-0 d-flex justify-content-between align-items-center">
               <div class="h5 card-title my-2">${product.name}</div>
-              <img src="../Icons/edit-icon.svg" alt="edit-icon" onclick="editProduct('${product.id}')" class="cursor-pointer edit-icon" data-bs-toggle="modal" data-bs-target="#updateProductModal">
+              <img src="../Icons/edit-icon.svg" alt="edit-icon" onclick="editProduct('${product.id}')" class="cursor-pointer edit-icon" data-bs-toggle="modal" data-bs-target="#addOrEditProductModal">
             </div>
-            <div class="card-body d-flex flex-column gap-1 flex-grow-1">
-              <p class="card-text fs-7 d-flex flex-column text-secondary">Description <span class="fs-6 text-dark fw-medium">${product.description}</span></p>
-              
-              <p class="card-text fs-7 d-flex flex-column text-secondary mt-auto">Category <span class="fs-6 text-dark fw-medium">${product.category}</span></p>
-
-              <div class="d-flex justify-content-between mt-auto">
-                <p class="card-text fs-7 d-flex flex-column text-secondary">Price <span class="fs-5 text-dark fw-medium">$${product.price}</span> </p>
-                <p class="card-text fs-7 d-flex flex-column text-secondary">Stock <span class="fs-5 fw-medium text-dark">${product.stock}</span></p>
+            <div class="card-body d-flex flex-column gap-1 flex-grow-1 d-flex flex-column gap-2">
+              <p class="card-text fs-7 d-flex flex-column text-secondary border border-1 p-3 rounded-2">Description <span class="fs-6 text-dark fw-medium">${product.description}</span></p>
+            
+              <div class="mt-auto border border-1 p-3 rounded-2">
+                <div class="d-flex flex-column gap-3">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <p class="card-text fs-7 d-flex flex-column text-secondary m-0">Category <span class="fs-6 text-dark fw-medium">${product.category}</span></p>
+                    <p class="card-text fs-7 d-flex flex-column text-secondary">Stock <span class="fs-5 fw-medium text-dark">${product.stock}</span></p>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex justify-content-center align-items-center mt-auto border border-1 p-2 rounded-2">
+                <p class="card-text fs-7 d-flex flex-column text-secondary m-0">Price <span class="fs-5 text-dark fw-medium">$${product.price}</span> </p>
               </div>
             </div>
             <div class="card-footer text-body-secondary border-top-0 d-flex justify-content-end align-items-center gap-3 p-3">
-              <img src="../Icons/delete-icon.svg" alt="delete-icon" class="cursor-pointer delete-icon" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" onclick="confirmProductDelete('${product.id}')">
+              <button class="btn px-3 btn-sm btn-outline-danger rounded-3 deleteBtn" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" onclick="confirmProductDelete('${product.id}')">Delete</button>
             </div>
           </div>
        </div>`,
@@ -132,21 +140,22 @@ const addProduct = (e) => {
   e.preventDefault();
 
   const formObj = {
-    id: productId.value,
+    id: Number(productId.value),
     name: productName.value,
     description: productDesc.value,
-    price: productPrice.value,
+    price: Number(productPrice.value),
     category: productCategory.value,
-    stock: productStock.value,
+    stock: Number(productStock.value),
   };
 
-  if (editingIndex === -1) {
+  if (editingId === null) {
     products.push(formObj);
   } else {
-    products[editingIndex] = formObj
-    editingIndex = -1
+    const index = products.findIndex((p) => p.id === editingId);
+    products[index] = formObj;
+    editingId = null;
   }
-  document.getElementById("productForm").reset()
+  document.getElementById("productForm").reset();
 
   renderProducts();
 };
@@ -177,10 +186,18 @@ const confirmProductDelete = (id) => {
 
 // Edit Product
 const editProduct = (id) => {
-  addProductModal.textContent = "Update Product"
+  // addOrUpdateProduct.textContent = "Update Product"
+  document.querySelector(".modal-header").innerHTML = `<h1
+                                class="modal-title fs-5 d-flex align-items-center justify-content-start gap-2 px-2"><img
+                                    src="../Images/edit-product.png" id="modalHeader"
+                                    alt="add-product" width="30" height="30">
+                                Update Product</h1>`;
   const numberId = Number(id);
   const prodId = products.find((p) => p.id === numberId);
-  editingIndex = products.indexOf(prodId)
+  console.log(numberId);
+  console.log(prodId);
+
+  editingId = numberId;
 
   productId.value = prodId.id;
   productName.value = prodId.name;
@@ -190,36 +207,11 @@ const editProduct = (id) => {
   productStock.value = prodId.stock;
 
   submitBtn.disabled = false;
-  submitBtn.textContent = "Update"
+  submitBtn.textContent = "Update";
 
-  const editModal = new bootstrap.Modal(addProductModal);
-  editModal.show();
-  
-
-  // const formObj = {
-  //   id: prodId.id,
-  //   name: prodId.name,
-  //   description: prodId.description,
-  //   price: prodId.price,
-  //   category: prodId.category,
-  //   stock: prodId.stock,
-  // };
-  // console.log(formObj);
+  // const editModal = new bootstrap.Modal(addProductModal);
+  // editModal.show();
 };
-
-// const updateProductInfo = (id) => {
-//   const numberId = Number(id);
-//   const prodId = products.find((p) => p.id === numberId);
-//   const formObj = {
-//     id: prodId.id,
-//     name: prodId.name,
-//     description: prodId.description,
-//     price: prodId.price,
-//     category: prodId.category,
-//     stock: prodId.stock,
-//   };
-//   Object.assign(prodId, formObj);
-// };
 
 // Validate Number Input (no "dash", "e", "+" allowed)
 const validateNumberInput = (e) => {
@@ -243,7 +235,7 @@ const validateId = () => {
 // Validate modal Form Values
 const validateFormInput = () => {
   const isDuplicateId = products.find(
-    (val) => val.id === Number(productId.value),
+    (val) => val.id === Number(productId.value) && val.id !== editingId,
   );
 
   const isFormValid =
@@ -259,11 +251,21 @@ const validateFormInput = () => {
 };
 
 // Reset values of Form Modal
-addProductModal.addEventListener("hidden.bs.modal", () => {
+addOrUpdateProduct.addEventListener("hidden.bs.modal", () => {
   productId.value = "";
   productName.value = "";
   productDesc.value = "";
   productPrice.value = "";
   productCategory.value = "";
   productStock.value = "";
+
+  document.querySelector(".modal-header").innerHTML = `<h1
+                                class="modal-title fs-5 d-flex align-items-center justify-content-start gap-2 px-2"><img
+                                    src="../Images/add-product.png" id="modalHeader"
+                                    alt="add-product" width="30" height="30">
+                                Add New Product</h1>`;
+
+  submitBtn.textContent = "Submit";
+  submitBtn.disabled = true;
+  editingId = null;
 });

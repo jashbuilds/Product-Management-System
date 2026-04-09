@@ -22,34 +22,11 @@
         <title>Product Management System</title>
     </head>
     <body>
-        <!-- <form action="#" id="form">
-            <label for="id">Id:</label>
-            <input type="number" min="0" id="id" required> <br>
-
-            <label for="name">Name:</label>
-            <input type="text" id="name" required> <br>
-
-            <label for="desc">Description:</label>
-            <input type="text" id="desc" required> <br>
-
-            <label for="price">Price:</label>
-            <input type="number" min="0" id="price" required> <br>
-
-            <label for="category">Category:</label>
-            <select name="category" id="category">
-                <option value selected></option>
-                <option value="Electronics">Electronics</option>
-                <option value="Stationary">Stationary</option>
-                <option value="Gym_Equipments">Gym-Equipments</option>
-            </select> <br> <br>
-
-            <button type="submit">Submit</button>
-        </form> -->
 
         <!-- NavBar -->
-        <nav class="navbar navbar-expand-sm sticky-top shadow-sm bg-gray">
+        <nav class="navbar navbar-expand-sm sticky-top shadow-sm">
             <div
-                class="container-fluid d-flex justify-content-sm-start justify-content-center align-items-center gap-3 my-2 mx-3">
+                class="container-fluid d-flex justify-content-sm-start justify-content-center align-items-center gap-1 gap-sm-3 my-2 mx-3">
                 <a class="navbar-brand m-0" href="#">
                     <img src="../Images/pms-logo.png"
                         alt="product-management-logo"
@@ -70,17 +47,17 @@
         <main class="mainContent">
 
             <!-- Button: Add Product -->
-            <div class="d-flex justify-content-end mx-3 my-4">
+            <div class="d-flex justify-content-end mx-4 mt-4">
                 <button type="button"
-                    class="btn addBtn btn-secondary border border-0 rounded-3 py-2 d-flex gap-2 justify-content-center align-items-center"
+                    class="btn addBtn btn-info text-white border border-0 rounded-3 py-2 d-flex gap-2 justify-content-center align-items-center"
                     data-bs-toggle="modal"
-                    data-bs-target="#addProductModal"><img
+                    data-bs-target="#addOrEditProductModal"><img
                         src="../Icons/add-icon.svg" alt="add-icon"
                         width="18" height="18">Add Product</button>
             </div>
 
-            <!-- Modal: Add Product -->
-            <div class="modal fade addProductModal" id="addProduct"
+            <!-- Modal: Add or Update Product -->
+            <div class="modal fade addProductModal" id="addOrEditProductModal"
                 tabindex="-1"
                 aria-labelledby="formModalLabel" aria-hidden="true"
                 data-bs-backdrop="static" data-bs-keyboard="false">
@@ -89,7 +66,7 @@
                         <div class="modal-header">
                             <h1
                                 class="modal-title fs-5 d-flex align-items-center justify-content-start gap-2 px-2"><img
-                                    src="../Images/add-product.png"
+                                    src="../Images/add-product.png" id="modalHeader"
                                     alt="add-product" width="30" height="30">
                                 Add New Product</h1>
                         </div>
@@ -223,150 +200,6 @@
                 </div>
             </div>
 
-            <!-- Modal: Update Product -->
-            <!-- <div class="modal fade updateProductModal" id="updateProductModal"
-                tabindex="-1"
-                aria-labelledby="formModalLabel" aria-hidden="true"
-                data-bs-backdrop="static" data-bs-keyboard="false">
-                <div class="modal-dialog modal-dialog-centered modal-lg">
-                    <div class="modal-content rounded-4">
-                        <div class="modal-header">
-                            <h1
-                                class="modal-title fs-5 d-flex align-items-center justify-content-start gap-2 px-2"><img
-                                    src="../Images/edit-product.png"
-                                    alt="add-product" width="30"
-                                    height="30">Update Product</h1>
-                        </div>
-                        <div class="modal-body pt-0">
-                            <form>
-                                <div class="container border-bottom">
-                                    <div class="row my-3">
-                                        <div class="col-md-4">
-                                            <div class="form-floating mb-4">
-                                                <input type="number" min="0"
-                                                    onKeyPress="if(this.value.length==4) return false;"
-                                                    class="form-control"
-                                                    id="productEditId"
-                                                    placeholder="Product ID"
-                                                    onkeydown="validateNumberInput(event)"
-                                                    oninput="validateFormInput(); validateId()"
-                                                    required>
-                                                <label for="productId"
-                                                    class="form-label fs-7">Id</label>
-
-                                                <div
-                                                    class="invalid-feedback">Please
-                                                    enter a valid Product Id!
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <div class="form-floating mb-4">
-                                                <input type="text"
-                                                    class="form-control"
-                                                    id="productEditName"
-                                                    placeholder="e.g. Smartphone"
-                                                    oninput="return validateFormInput()"
-                                                    required>
-                                                <label for="productName"
-                                                    class="form-label fs-7">Product
-                                                    Name</label>
-
-                                                <div
-                                                    class="invalid-feedback">Please
-                                                    enter a valid Name!
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-floating mb-4">
-                                                <textarea name="description"
-                                                    rows="2" cols="6"
-                                                    class="form-control"
-                                                    id="productEditDesc"
-                                                    placeholder="Enter product description..."
-                                                    oninput="return validateFormInput()"
-                                                    required></textarea>
-                                                <label for="department"
-                                                    class="form-label fs-7">Description</label>
-
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4 col-md-6">
-                                            <div class="input-group mb-4">
-                                                <div class="form-floating">
-                                                    <input type="number" min="0"
-                                                        onKeyPress="if(this.value.length==8) return false;"
-                                                        class="form-control"
-                                                        id="productEditPrice"
-                                                        placeholder="Enter product Price"
-                                                        onkeydown="return validateNumberInput(event)"
-                                                        oninput="return validateFormInput()"
-                                                        required>
-                                                    <label for="role"
-                                                        class="form-label fs-7">Price</label>
-                                                </div>
-                                                <span
-                                                    class="input-group-text">$</span>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4 col-md-6">
-                                            <div class="form-floating mb-4">
-
-                                                <select
-                                                    class="form-select cursor-pointer"
-                                                    oninput="return validateFormInput()"
-                                                    id="productEditCategory"
-                                                    aria-label="Select Category"
-                                                    required>
-                                                    <option value selected>All
-                                                        Category</option>
-                                                    <option
-                                                        value="Electronics">Electronics</option>
-                                                    <option
-                                                        value="Stationery">Stationery</option>
-                                                    <option
-                                                        value="Footwear">Footwear</option>
-                                                    <option
-                                                        value="Fitness">Fitness</option>
-                                                </select>
-                                                <label for="salary"
-                                                    class="form-label fs-7">Category</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4 col-md-6">
-                                            <div class="form-floating mb-4">
-                                                <input type="number" min="0"
-                                                    onKeyPress="if(this.value.length==6) return false;"
-                                                    class="form-control"
-                                                    placeholder="Enter product Stock"
-                                                    onkeydown="return validateNumberInput(event)"
-                                                    oninput="return validateFormInput()"
-                                                    id="productEditStock"
-                                                    required>
-                                                <label class="form-label fs-7"
-                                                    for="productStock">Stock</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div
-                                    class="d-flex gap-3 flex-row justify-content-end align-items-center py-3">
-                                    <button type="button"
-                                        class="btn btn-outline-danger"
-                                        data-bs-dismiss="modal">Close</button>
-                                    <button type="submit"
-                                        data-bs-dismiss="modal"
-                                        class="btn btn-primary-custom"
-                                        id="submitBtn">Update</button> 
-                                </div>
-
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-
             <!-- Modal: Delete Product Confirmation -->
             <div class="modal fade" id="deleteConfirmationModal"
                 tabindex="-1"
@@ -392,8 +225,8 @@
             </div>
 
             <!-- Card: Product Information -->
-            <section class="container my-5">
-                <div class="row d-flex gy-4" id="productGrid">
+            <section class="container-fluid my-5">
+                <div class="row d-flex gy-5 mx-sm-5" id="productGrid">
                     <!-- Card html structure -->
                 </div>
             </section>
