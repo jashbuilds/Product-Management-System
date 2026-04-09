@@ -1,17 +1,96 @@
-:root{
+:root {
     --color-gray: rgb(245, 244, 244);
+    --color-primary: #777877;
+    --color-white: white;
+    --color-primary-shadow: rgba(78, 184, 140, 0.3);
+    --color-primary-hover-shadow: rgba(60, 165, 122, 0.4);
+    --color-primary-disabled: #a6a7a6;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
     font-family: 'Montserrat', sans-serif;
 }
 
-/* Custom Class */
-.bg-gray {
-    background-color: var(--color-gray); 
+.mainContent .addBtn {
+    transition: all 0.3s ease;
 }
 
-/* .mh-250 {
-    min-height: 250px;
-    max-height: 250px;
-} */
+.mainContent .addBtn:hover {
+    transform: scale(1) translateY(-1px);
+}
+
+.mainContent .productCard {
+    min-height: 100%;
+    transition: all 0.3s ease;
+}
+
+.mainContent .productCard:hover {
+    transform: scale(1) translateY(-1px);
+}
+
+.mainContent .addProductModal, .mainContent .updateProductModal {
+    backdrop-filter: blur(4px);
+}
+
+/* Custom Class */
+.bg-gray {
+    background-color: var(--color-gray);
+}
+
+.mh-250 {
+    min-height: 320px;
+    max-height: 320px;
+}
+
+.fs-7 {
+    font-size: 14px;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.btn-primary-custom {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    border: none;
+    box-shadow: 0 3px 6px var(--color-primary-shadow);
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-primary-custom:hover {
+    background-color: var(--color-primary);
+    box-shadow: 0 5px 10px var(--color-primary-hover-shadow);
+    color: var(--color-white);
+    transform: scale(1) translateY(-2px);
+}
+
+.btn-primary-custom:disabled {
+    background-color: var(--color-primary-disabled);
+    color: var(--color-white);
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+.edit-icon {
+    transition: all 0.2s ease-in-out;
+}
+
+.edit-icon:hover{
+    transform: scale(1) translateY(-1px);
+    box-shadow: 0 5px 10px var(--color-primary-hover-shadow);
+}
+
+.delete-icon {
+    transition: all 0.2s ease-in-out;
+}
+
+.delete-icon:hover{
+    transform: scale(1) translateY(-1px);
+}
