@@ -38,6 +38,7 @@
 {/* <img src="../Icons/delete-icon.svg" alt="delete-icon" class="cursor-pointer delete-icon" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" onclick="confirmProductDelete('${product.id}')"> */}
 
 
+// Select DOM elements for form inputs and UI containers
 const productId = document.getElementById("productId");
 const productName = document.getElementById("productName");
 const productDesc = document.getElementById("productDesc");
@@ -49,8 +50,10 @@ const productGrid = document.getElementById("productGrid");
 const submitBtn = document.getElementById("submitBtn");
 const addOrUpdateProduct = document.getElementById("addOrEditProductModal");
 
+// Global state to track if we are currently editing an existing product
 let editingId = null;
 
+// Initial product data (Sample dataset)
 const products = [
   {
     id: 1,
@@ -86,61 +89,94 @@ const products = [
   },
 ];
 
-// Render Product Cards
+/**
+ * Render Product Cards:
+ * This function clears the productGrid and regenerates the HTML for every product in the array.
+ * It uses Bootstrap utility classes combined with custom CSS for the 'Premium' look.
+ */
 const renderProducts = () => {
   productGrid.innerHTML = products
     .map(
       (product) =>
         `
-       <div class="col-12 col-lg-3 col-md-6 d-flex justify-content-center align-items-center">
-          <div class="card productCard w-100 border rounded-4 h-auto shadow-sm mx-sm-1 mx-2">
-            <div class="card-header border-bottom-0 d-flex justify-content-between align-items-center">
-              <div class="h5 card-title my-2">${product.name}</div>
-              <img src="../Icons/edit-icon.svg" alt="edit-icon" onclick="editProduct('${product.id}')" class="cursor-pointer edit-icon" data-bs-toggle="modal" data-bs-target="#addOrEditProductModal">
-            </div>
-            <div class="card-body d-flex flex-column gap-1 flex-grow-1 d-flex flex-column gap-2">
-              <p class="card-text fs-7 d-flex flex-column text-secondary border border-1 p-3 rounded-2">Description <span class="fs-6 text-dark fw-medium">${product.description}</span></p>
+       <div class="col-12 col-lg-3 col-md-6">
+          <!-- Main Card Container: Uses shadow-sm, rounded-4 (1rem), and custom productCard class for hover -->
+          <div class="card productCard shadow-sm rounded-4 border overflow-hidden h-100">
             
-              <div class="mt-auto border border-1 p-3 rounded-2">
-                <div class="d-flex flex-column gap-3">
-                  <div class="d-flex justify-content-between align-items-center">
-                    <p class="card-text fs-7 d-flex flex-column text-secondary m-0">Category <span class="fs-6 text-dark fw-medium">${product.category}</span></p>
-                    <p class="card-text fs-7 d-flex flex-column text-secondary">Stock <span class="fs-5 fw-medium text-dark">${product.stock}</span></p>
-                  </div>
+            <!-- Card Header: Contains category pill and product name -->
+            <div class="card-header bg-transparent py-3 px-4 border-bottom border-2 d-flex justify-content-between align-items-start">
+              <div>
+                <span class="category-badge d-inline-block mb-2">${product.category}</span>
+                <h4 class="card-title mb-0">${product.name}</h4>
+              </div>
+              <!-- Edit Action: Triggers the main modal -->
+              <button class="btn btn-link p-0 edit-icon" onclick="editProduct('${product.id}')" data-bs-toggle="modal" data-bs-target="#addOrEditProductModal">
+                <img src="../Icons/edit-icon.svg" alt="edit" width="20" height="20">
+              </button>
+            </div>
+            
+            <!-- Card Body: Contains description and internal padding (p-4) -->
+            <div class="card-body p-4 d-flex flex-column gap-3">
+              <!-- Description: Truncated to 3 lines for visual consistency -->
+              <p class="card-text text-muted fs-7 mb-0 flex-grow-1" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; min-height: 3.6em;">
+                ${product.description}
+              </p>
+              
+              <!-- Info Section: Price and Stock labels -->
+              <div class="d-flex justify-content-between align-items-end pt-2">
+                <div>
+                  <div class="price-tag mb-1">$${product.price.toLocaleString()}</div>
+                  <div class="stock-label">Total Price</div>
+                </div>
+                <div class="text-end">
+                  <div class="fw-bold fs-5 ${product.stock < 10 ? 'text-danger' : 'text-dark'}">${product.stock}</div>
+                  <div class="stock-label">Stock Available</div>
                 </div>
               </div>
-              <div class="d-flex justify-content-center align-items-center mt-auto border border-1 p-2 rounded-2">
-                <p class="card-text fs-7 d-flex flex-column text-secondary m-0">Price <span class="fs-5 text-dark fw-medium">$${product.price}</span> </p>
+
+              <!-- Delete Action: Centers the button at the bottom -->
+              <div class="text-center mt-2">
+                <button class="delete-btn-simple rounded-3" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#deleteConfirmationModal" 
+                        onclick="confirmProductDelete('${product.id}')">
+                  Delete Product
+                </button>
               </div>
             </div>
-            <div class="card-footer text-body-secondary border-top-0 d-flex justify-content-end align-items-center gap-3 p-3">
-              <button class="btn px-3 btn-sm btn-outline-danger rounded-3 deleteBtn" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" onclick="confirmProductDelete('${product.id}')">Delete</button>
-            </div>
           </div>
-       </div>`,
+       </div>`
     )
     .join("");
 
+  // Empty State: Displayed if no products exist in the array
   if (products.length === 0) {
-    productGrid.classList.add(
-      "d-flex",
-      "justify-content-center",
-      "align-items-center",
-      "fw-medium",
-      "fs-5",
-    );
-    productGrid.textContent = "No Products Available!";
+    productGrid.innerHTML = `
+      <div class="col-12 text-center py-5">
+        <div class="display-1 text-muted opacity-25 mb-3">📦</div>
+        <h3 class="text-muted">Inventory Empty</h3>
+        <p class="text-muted fs-7">Click the "Add New Product" button above to get started.</p>
+      </div>`;
   }
 };
 
+/**
+ * Initial Render:
+ * Populate the UI with initial product data when the script first loads.
+ */
 renderProducts();
 
-// add Product
+/**
+ * Add or Update Product:
+ * This function handles the form submission logic. It determines whether to
+ * create a new product or update an existing one based on the 'editingId'.
+ */
 const addProduct = (e) => {
-  e.preventDefault();
+  e.preventDefault(); // Prevents the default form submission page reload
 
+  // Gather form values into a single object
   const formObj = {
-    id: Number(productId.value),
+    id: Number(productId.value), // Convert string input to number
     name: productName.value,
     description: productDesc.value,
     price: Number(productPrice.value),
@@ -149,56 +185,72 @@ const addProduct = (e) => {
   };
 
   if (editingId === null) {
+    // Mode: Add New Product
     products.push(formObj);
   } else {
+    // Mode: Update Existing Product
     const index = products.findIndex((p) => p.id === editingId);
     products[index] = formObj;
-    editingId = null;
+    editingId = null; // Reset edit state after update
   }
+
+  // Clear the form fields after successful submission
   document.getElementById("productForm").reset();
 
+  // Refresh the UI to show updated product list
   renderProducts();
 };
 
-// delete product
+/**
+ * Delete product:
+ * Removes a specific product from the array based on its ID.
+ */
 const deleteProduct = (id) => {
   const numberId = Number(id);
 
+  // Find the product and its index, then remove using splice
   const prodId = products.find((p) => p.id === numberId);
   const position = products.indexOf(prodId);
 
   products.splice(position, 1);
-  renderProducts();
+  renderProducts(); // Refresh UI
 };
 
-// Delete product confirmation
+/**
+ * Delete product confirmation:
+ * Prepares the confirmation message and injects the 'confirm' button
+ * into the deleteConfirmationModal.
+ */
 const confirmProductDelete = (id) => {
   const numberId = Number(id);
   const prodId = products.find((p) => p.id === numberId);
 
+  // Set warning text with product name
   document.getElementById("deleteConfirmation").textContent =
     `Are you sure, You want to delete Product '${prodId.name}' ?`;
 
+  // Inject the confirmation actions
   document.getElementById("deleteConfirm").innerHTML =
     `<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">No</button>
      <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="deleteProduct('${id}')">Yes</button>`;
 };
 
-// Edit Product
+/**
+ * Edit Product:
+ * Populates the modal fields with the data of the product being edited
+ * and switches the modal UI to 'Update' mode.
+ */
 const editProduct = (id) => {
-  // addOrUpdateProduct.textContent = "Update Product"
-  document.querySelector(".modal-header").innerHTML = `<h1
-                                class="modal-title fs-5 d-flex align-items-center justify-content-start gap-2 px-2"><img
-                                    src="../Images/edit-product.png" id="modalHeader"
-                                    alt="add-product" width="30" height="30">
-                                Update Product</h1>`;
+  // Update UI indicators to 'Update' mode
+  document.getElementById("modalHeader").src = "../Images/edit-product.png";
+  document.getElementById("formModalLabel").textContent = "Update Product";
+
   const numberId = Number(id);
   const prodId = products.find((p) => p.id === numberId);
-  console.log(numberId);
-  console.log(prodId);
 
-  editingId = numberId;
+  editingId = numberId; // Set global state to the current product being edited
 
+  // Sync data to form inputs
   productId.value = prodId.id;
   productName.value = prodId.name;
   productDesc.value = prodId.description;
@@ -206,24 +258,31 @@ const editProduct = (id) => {
   productCategory.value = prodId.category;
   productStock.value = prodId.stock;
 
+  // Enable the update button immediately
   submitBtn.disabled = false;
   submitBtn.textContent = "Update";
-
-  // const editModal = new bootstrap.Modal(addProductModal);
-  // editModal.show();
 };
 
-// Validate Number Input (no "dash", "e", "+" allowed)
+/**
+ * Validate Number Input:
+ * Prevents non-numeric characters like "e", "E", or subtraction symbols
+ * from being entered into number-based input fields.
+ */
 const validateNumberInput = (e) => {
   if (e.key === "-" || e.key === "e" || e.key === "+") e.preventDefault();
 };
 
-// Validate ID
+/**
+ * Validate ID:
+ * A real-time check to ensure the Product ID entered is unique.
+ * Adds a red border (Bootstrap 'is-invalid' class) if a duplicate is found.
+ */
 const validateId = () => {
   const isDuplicateId = products.find(
     (val) => val.id === Number(productId.value),
   );
 
+  // Allow blank input (let HTML5 required handle it), but block duplicates
   if (!isDuplicateId || productId.value.trim() === "") {
     productId.classList.remove("is-invalid");
   } else {
@@ -232,7 +291,11 @@ const validateId = () => {
   }
 };
 
-// Validate modal Form Values
+/**
+ * Validate Modal Form Values:
+ * Comprehensive check that runs on every input change. 
+ * Enables the Submit/Update button only when all fields are valid.
+ */
 const validateFormInput = () => {
   const isDuplicateId = products.find(
     (val) => val.id === Number(productId.value) && val.id !== editingId,
@@ -247,11 +310,17 @@ const validateFormInput = () => {
     productCategory.value.trim() !== "" &&
     productStock.value.trim() !== "";
 
+  // Enable/Disable Submit button based on form validity
   submitBtn.disabled = !isFormValid;
 };
 
-// Reset values of Form Modal
+/**
+ * Reset Values of Form Modal:
+ * A lifecycle event listener that clears all data when the modal is closed.
+ * Ensures the next time it opens, it is clean and in 'Add New' mode.
+ */
 addOrUpdateProduct.addEventListener("hidden.bs.modal", () => {
+  // Clear all values
   productId.value = "";
   productName.value = "";
   productDesc.value = "";
@@ -259,13 +328,11 @@ addOrUpdateProduct.addEventListener("hidden.bs.modal", () => {
   productCategory.value = "";
   productStock.value = "";
 
-  document.querySelector(".modal-header").innerHTML = `<h1
-                                class="modal-title fs-5 d-flex align-items-center justify-content-start gap-2 px-2"><img
-                                    src="../Images/add-product.png" id="modalHeader"
-                                    alt="add-product" width="30" height="30">
-                                Add New Product</h1>`;
+  // Restore default UI headers/buttons
+  document.getElementById("modalHeader").src = "../Images/add-product.png";
+  document.getElementById("formModalLabel").textContent = "Add New Product";
 
   submitBtn.textContent = "Submit";
   submitBtn.disabled = true;
-  editingId = null;
+  editingId = null; // Clear edit tracking
 });
