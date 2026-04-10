@@ -14,128 +14,52 @@ const apiUrl = "https://caabac588c5e7e75d2f7.free.beeceptor.com";
 
 let editingId = null;
 let productData = [];
-let isLoading = true;
 
-// const products = [
-//   {
-//     id: 1,
-//     name: "OnePlus",
-//     description: "OnePlus Nord CE 3 Lite 5G",
-//     price: 20000,
-//     category: "Electronics",
-//     stock: 200,
-//   },
-//   {
-//     id: 2,
-//     name: "Iphone",
-//     description: "Iphone 14 pro max with 128GB storage in matte black color.",
-//     price: 56000,
-//     category: "Electronics",
-//     stock: 126,
-//   },
-//   {
-//     id: 3,
-//     name: "LeeCooper Shoes",
-//     description: "Branded Shoes wrapped in real Leather.",
-//     price: 3400,
-//     category: "Footwear",
-//     stock: 520,
-//   },
-//   {
-//     id: 4,
-//     name: "Dumbells",
-//     description: "Dumbell Set each of 10kg. Rust free metal.",
-//     price: 1500,
-//     category: "Fitness",
-//     stock: 100,
-//   },
-//   {
-//     id: 1,
-//     name: "OnePlus",
-//     description: "OnePlus Nord CE 3 Lite 5G",
-//     price: 20000,
-//     category: "Electronics",
-//     stock: 200,
-//   },
-//   {
-//     id: 2,
-//     name: "Iphone",
-//     description: "Iphone 14 pro max with 128GB storage in matte black color.",
-//     price: 56000,
-//     category: "Electronics",
-//     stock: 126,
-//   },
-//   {
-//     id: 3,
-//     name: "LeeCooper Shoes",
-//     description: "Branded Shoes wrapped in real Leather.",
-//     price: 3400,
-//     category: "Footwear",
-//     stock: 520,
-//   },
-//   {
-//     id: 4,
-//     name: "Dumbells",
-//     description: "Dumbell Set each of 10kg. Rust free metal.",
-//     price: 1500,
-//     category: "Fitness",
-//     stock: 100,
-//   },
-// ];
-
-const renderProducts = () => {
-  axios
-    .get(`${apiUrl}/api/products`)
-    .then((res) => {
-      isLoading = false;
-      productData = res.data;
-
-      productGrid.innerHTML = productData
-        .map(
-          (product) =>
-            `
+const generateSkeletons = (count) => {
+  return Array(count)
+    .fill(0)
+    .map(
+      () => ` 
        <div class="col-12 col-lg-3 col-md-6">
           <div class="card productCard bg-white shadow-sm rounded-4 border overflow-hidden h-100">
             
-            <div class="card-header ${isLoading ? "placeholder-wave" : ""} bg-transparent py-3 px-4 d-flex justify-content-between align-items-start">
-              <div>
-                <span class="category-badge ${isLoading ? "placeholder col-12" : ""} rounded-5 fw-semibold text-uppercase d-inline-block mb-2">${isLoading ? "" : product.category}</span>
-                <p class="h4 card-title fw-bolder mb-0 ${isLoading ? "placeholder col-12" : ""}">${isLoading ? "" : product.name}</p>
+            <div class="card-header placeholder-glow bg-transparent py-3 px-4 d-flex justify-content-between align-items-start">
+              <div class="d-flex flex-column w-100">
+                <span class="category-badge placeholder-glow placeholder-lg col-4 rounded-5 fw-semibold text-uppercase d-inline-block mb-3"></span>
+                <p class="h4 card-title fw-bolder mb-0 placeholder bg-secondary col-6"></p>
               </div>
-              <button class="btn btn-link p-0 edit-icon ${isLoading ? "placeholder d-none" : ""}" onclick="editProduct('${product.id}')" data-bs-toggle="modal" data-bs-target="#addOrEditProductModal">
-                <img src="../Icons/edit-icon.svg" alt="edit" width="20" height="20">
+              <button class="btn btn-link p-0 placeholder col-2">
               </button>
             </div>
             
-            <div class="card-body p-4 d-flex flex-column gap-3 ${isLoading ? "placeholder-wave" : ""}">
-              <p class="card-text text-muted fs-7 mb-0 flex-grow-1 ${isLoading ? "placeholder col-12" : ""}">
-                ${isLoading ? "" : product.description}
-              </p>
+            <div class="card-body p-4 d-flex flex-column gap-3 placeholder-glow">
+              <p class="card-text text-muted fs-7 mb-0 flex-grow-1 placeholder col-12"></p>
               
-              <div class="d-flex justify-content-between align-items-end pt-2 ${isLoading ? "placeholder-wave" : ""}">
-                <div class="${isLoading ? "placeholder col-6" : ""}">
-                  <div class="price-tag fw-bolder fs-5 mb-1">$${isLoading ? "" : product.price.toLocaleString()}</div>
-                  <div class="stock-label text-muted fw-semibold">${isLoading ? "" : "Total Price"}</div>
-                </div>
-                <div class="text-end ${isLoading ? "placeholder col-6" : ""}">
-                  <div class="fw-bold ${isLoading ? "placeholder" : ""} fs-5 ${product.stock < 10 ? "text-danger" : "text-dark"}">${isLoading ? "" : product.stock}</div>
-                  <div class="stock-label text-muted fw-semibold">${isLoading ? "" : "Stock Available"}</div>
-                </div>
+              <div class="d-flex justify-content-between align-items-center gap-2 pt-2 mt-3">
+                  <div class="placeholder col-4 bg-secondary"></div>
+                  <div class="placeholder col-4 bg-secondary"></div>
               </div>
 
-              <div class="text-center mt-2">
-                <button class="delete-btn-simple ${isLoading ? "placeholder cursor-wait col-6" : ""} rounded-3 border-0 fw-medium" 
-                        data-bs-toggle="modal" 
-                        data-bs-target="#deleteConfirmationModal" 
-                        onclick="confirmProductDelete('${product.id}')">
-                  ${isLoading ? "" : "Delete Product"}
-                </button>
+              <div class="text-center mt-4">
+                <button class="bg-danger p-3 rounded-3 border-0 fw-medium placeholder col-6"></button>
               </div>
             </div>
           </div>
        </div>`,
-        )
-        .join("");
+    )
+    .join("");
+};
+
+const renderProducts = () => {
+  productGrid.innerHTML = generateSkeletons(8);
+
+  axios
+    .get(`${apiUrl}/api/products`)
+    .then((res) => {
+      productData = res.data;
+
+      renderActualData();
+
       if (productData.length === 0) {
         productGrid.innerHTML = `
       <div class="col-12 text-center py-5">
@@ -148,6 +72,55 @@ const renderProducts = () => {
 };
 
 renderProducts();
+
+const renderActualData = () => {
+  productGrid.innerHTML = productData
+    .map(
+      (product) =>
+        `
+       <div class="col-12 col-lg-3 col-md-6">
+          <div class="card productCard bg-white shadow-sm rounded-4 border overflow-hidden h-100">
+            
+            <div class="card-header bg-transparent py-3 px-4 d-flex justify-content-between align-items-start">
+              <div>
+                <span class="category-badge rounded-5 fw-semibold text-uppercase d-inline-block mb-2">${product.category}</span>
+                <p class="h4 card-title fw-bolder mb-0">${product.name}</p>
+              </div>
+              <button class="btn btn-link p-0 edit-icon onclick="editProduct('${product.id}')" data-bs-toggle="modal" data-bs-target="#addOrEditProductModal">
+                <img src="../Icons/edit-icon.svg" alt="edit" width="20" height="20">
+              </button>
+            </div>
+            
+            <div class="card-body p-4 d-flex flex-column gap-3">
+              <p class="card-text text-muted fs-7 mb-0 flex-grow-1">
+                ${product.description}
+              </p>
+              
+              <div class="d-flex justify-content-between align-items-end pt-2">
+                <div>
+                  <div class="price-tag fw-bolder fs-5 mb-1">$${product.price.toLocaleString()}</div>
+                  <div class="stock-label text-muted fw-semibold">Total Price</div>
+                </div>
+                <div class="text-end">
+                  <div class="fw-bold fs-5 ${product.stock < 10 ? "text-danger" : "text-dark"}">${product.stock}</div>
+                  <div class="stock-label text-muted fw-semibold">Stock Available</div>
+                </div>
+              </div>
+
+              <div class="text-center mt-2">
+                <button class="delete-btn-simple rounded-3 border-0 fw-medium" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#deleteConfirmationModal" 
+                        onclick="confirmProductDelete('${product.id}')">
+                  Delete Product
+                </button>
+              </div>
+            </div>
+          </div>
+       </div>`,
+    )
+    .join("");
+};
 
 const addProduct = (e) => {
   e.preventDefault();

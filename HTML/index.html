@@ -23,8 +23,9 @@
         <title>Product Management System</title>
     </head>
 
-    <body>
+    <body class="productDashboard">
 
+        <!-- NavBar -->
         <nav class="navbar sticky-top bg-white shadow-sm py-2">
             <div
                 class="container-fluid d-flex justify-content-between align-items-center px-4">
@@ -45,6 +46,7 @@
         <!-- Main Container -->
         <main class="mainContent">
 
+            <!-- Add Product Button -->
             <div class="pt-4 px-4 px-sm-5 d-flex justify-content-end">
                 <button type="button"
                     class="add-btn text-white d-flex align-items-center gap-2 border-0 fw-semibold"
@@ -52,11 +54,11 @@
                     data-bs-target="#addOrEditProductModal">
                     <img src="../Icons/add-icon.svg" alt="add" width="18"
                         height="18">
-                    Add New Product
+                    Add Product
                 </button>
             </div>
 
-            <!-- Add Or Delete Modal -->
+            <!-- Add/Update Modal -->
             <div class="modal fade" id="addOrEditProductModal" tabindex="-1"
                 aria-labelledby="formModalLabel" aria-hidden="true"
                 data-bs-backdrop="static" data-bs-keyboard="false">
@@ -208,6 +210,7 @@
                 </div>
             </div>
 
+            <!-- Products Grid -->
             <section class="container-fluid my-4 px-4 px-sm-5">
                 <div class="row g-4" id="productGrid">
                     <!-- Product cards will be displayed here after rendering -->
