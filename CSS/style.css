@@ -1,13 +1,15 @@
-/* Import Google Fonts: 'Outfit' for titles/UI and 'Inter' for body text */
+
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Inter:wght@100..900&display=swap');
 
 :root {
-    /* Brand Color Palette: Primary (Indigo) and Accent (Teal) */
     --primary: #6366f1;
     --primary-dark: #4f46e5;
+    --primary-dark-shadow: rgba(67, 67, 69, 0.3);
+    --light-gray-shadow: rgba(87, 87, 87, 0.1);
     --accent: #14b8a6;
+    --secondary-red: #dc3545;
+    --primary-indigo: rgba(99, 102, 241, 0.1);
     
-    /* System Colors: Light slate background and dark slate text for high readability */
     --bg-main: #f1f5f9;
     --text-main: #0f172a;
     --text-muted: #64748b;
@@ -15,143 +17,86 @@
 }
 
 body {
-    /* Setting the modern 'Outfit' font as the base for the entire application */
     font-family: 'Outfit', sans-serif;
     background-color: var(--bg-main);
     color: var(--text-main);
 }
 
-/* Navbar: Custom background logic (Bootstrap handles the shadow/padding) */
-.navbar {
-    background: white;
+.mainContent .productDesc {
+    height: 100px;
 }
 
-/* Add Product Button: Premium styling with transitions */
-.add-btn {
+.mainContent .add-btn {
     background-color: var(--primary);
-    color: white;
     padding: 10px 24px;
-    border-radius: 12px; /* Smoother corner radius than standard buttons */
-    transition: all 0.2s ease; /* Smooth hover transition */
+    border-radius: 12px;
+    transition: all 0.2s ease;
 }
 
-.add-btn:hover {
+.mainContent .add-btn:hover {
     background-color: var(--primary-dark);
-    transform: translateY(-2px); /* Slight lift effect on hover */
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); /* Glowing indigo shadow */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--primary-dark-shadow);
 }
 
-/* Product Cards: Custom Premium Logic */
-.productCard {
-    background: white;
-    border-color: #e2e8f0 !important;
-    /* Cubic-bezier provides a realistic 'bounce' effect when lifting */
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+.mainContent .productCard {
+    transition: all 0.2s ease-in-out;
 }
 
-.productCard:hover {
-    transform: translateY(-8px); /* Card lifts significantly for depth */
-    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1) !important; /* Deeper shadow on hover */
-    border-color: var(--primary) !important; /* Border changes to brand color */
+.mainContent .productCard:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 15px -3px var(--light-gray-shadow) !important; 
+    border-color: var(--primary) !important; 
 }
 
-/* Delete Button: Minimalist style with red transparency effects */
-.delete-btn-simple {
-    color: #dc3545;
-    background: transparent;
-    border: none;
+.mainContent .productCard .delete-btn-simple {
+    color: var(--secondary-red);
     padding: 4px 12px;
     border-radius: 8px;
     font-size: 0.875rem;
-    font-weight: 500;
-    opacity: 0.7; /* Subtler when not in focus */
+    opacity: 0.7;
     transition: all 0.2s ease;
 }
 
-.delete-btn-simple:hover {
-    opacity: 1; /* Lights up on hover */
-    background: rgba(220, 53, 69, 0.1); /* Subtle light red background */
-    color: #bb2d3b;
+.mainContent .productCard .delete-btn-simple:hover {
+    opacity: 1;
+    background: rgba(220, 53, 69, 0.1); 
 }
 
-/* Category Badge: Pill-style badge used in cards */
-.category-badge {
+.mainContent .productCard .category-badge {
     padding: 4px 12px;
-    border-radius: 20px; /* Fully rounded 'pill' shape */
-    font-size: 0.75rem;
-    font-weight: 600;
-    background: rgba(99, 102, 241, 0.1); /* Transparent indigo background */
+    font-size: 12px;
+    background: var(--primary-indigo);
     color: var(--primary);
-    text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
-/* Custom Card Header: Forced transparent background and bold bottom border */
-.card-header {
-    background: transparent !important;
-    border-bottom: 2px solid #e2e8f0 !important;
+.mainContent .productCard .card-title {
+    font-size: 22px;
 }
 
-.card-title {
-    font-weight: 800; /* Extra bold for maximum emphasis */
-    font-size: 1.4rem;
+.mainContent .productCard .stock-label {
+    font-size: 12px;
 }
 
-/* Price Tag: High contrast styling for pricing */
-.price-tag {
-    color: var(--text-main);
-    font-weight: 800;
-    font-size: 1.1rem;
+
+.mainContent .btn-primary-custom {
+    transition: all 0.2s ease-in-out;
 }
 
-/* Stock Labels: Smaller, muted font for secondary information */
-.stock-label {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    font-weight: 600;
+.mainContent .btn-primary-custom:hover {
+    transform: translateY(-2px);
 }
 
-/* Modal Customization */
-.modal-content {
-    border: none; /* Removing default border to use shadow depth instead */
+.mainContent .edit-icon {
+    transition: all 0.2s ease-in-out;
 }
 
-/* Form Styling: Consistent border radius and focus states */
-.form-control, .form-select {
-    border-color: var(--border-color);
+.mainContent .edit-icon:hover {
+    transform: translateY(-2px);
 }
 
-.form-control:focus, .form-select:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); /* Subtle focus ring */
-}
-
-.btn-primary-custom {
-    background-color: var(--primary);
-    color: white;
-    transition: all 0.2s ease;
-}
-
-.btn-primary-custom:hover:not(:disabled) {
-    background-color: var(--primary-dark);
-}
-
-.btn-primary-custom:disabled {
-    background-color: #cbd5e1; /* Visual feedback for disabled button */
-}
-
-/* Edit Icon: Square icons used in card titles */
-.edit-icon {
-    padding: 5px;
-    border-radius: 8px;
-    transition: background 0.2s;
-}
-
-.edit-icon:hover {
-    background: #f1f5f9; /* Subtle light background on hover */
-}
-
-/* Global Utilities */
-.fs-7 { font-size: 0.875rem; } /* Slightly smaller than 'fs-6' (14px) */
+/* Custom Classes */
+.fs-7 { font-size: 14px; } 
 .cursor-pointer { cursor: pointer; }
-
+.cursor-wait { cursor: wait !important; }
