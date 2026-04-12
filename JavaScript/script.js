@@ -9,8 +9,12 @@ const productGrid = document.getElementById("productGrid");
 const submitBtn = document.getElementById("submitBtn");
 const cancelBtn = document.getElementById("cancelBtn");
 const addOrUpdateProduct = document.getElementById("addOrEditProductModal");
+const deleteConfirmationModal = document.getElementById("deleteConfirmationModal")
 
-const apiUrl = "https://caabac588c5e7e75d2f7.free.beeceptor.com";
+const spinner = document.createElement("span");
+spinner.classList.add("spinner-border", "spinner-border-sm");
+
+const apiUrl = "https://cae7d36194ce589956c4.free.beeceptor.com";
 
 let editingId = null;
 let productData = [];
@@ -86,7 +90,7 @@ const renderActualData = () => {
                 <span class="category-badge rounded-5 fw-semibold text-uppercase d-inline-block mb-2">${product.category}</span>
                 <p class="h4 card-title fw-bolder mb-0">${product.name}</p>
               </div>
-              <button class="btn btn-link p-0 edit-icon onclick="editProduct('${product.id}')" data-bs-toggle="modal" data-bs-target="#addOrEditProductModal">
+              <button class="btn btn-link p-0 edit-icon" onclick="editProduct('${product.id}')" data-bs-toggle="modal" data-bs-target="#addOrEditProductModal">
                 <img src="../Icons/edit-icon.svg" alt="edit" width="20" height="20">
               </button>
             </div>
@@ -135,9 +139,6 @@ const addProduct = (e) => {
     category: productCategory.value,
     stock: Number(productStock.value),
   };
-
-  const spinner = document.createElement("span");
-  spinner.classList.add("spinner-border", "spinner-border-sm");
 
   submitBtn.appendChild(spinner);
   submitBtn.classList.add(
@@ -200,16 +201,33 @@ const editProduct = (id) => {
 };
 
 const deleteProduct = (id) => {
+
+  const modal = bootstrap.Modal.getInstance(deleteConfirmationModal)
+  const deleteConfirmBtn = document.getElementById("deleteConfirmBtn")
+
   const numberId = Number(id);
 
   const prodId = productData.find((p) => p.id === numberId);
   const productId = prodId.id;
+
+  deleteConfirmBtn.classList.add(
+    "d-flex",
+    "justify-content-center",
+    "align-items-center",
+    "gap-2",
+  );
+  deleteConfirmBtn.disabled = true;
+  cancelBtn.disabled = true;
 
   axios
     .delete(`${apiUrl}/api/products/${productId}`)
     .then((res) => {
       console.log("Data Deleted Successfully: ", res.data);
       renderProducts();
+
+      deleteConfirmBtn.appendChild(spinner);
+      modal.hide()
+
     })
     .catch((err) => console.log("Error Deleting Data:", err));
 };
@@ -223,7 +241,7 @@ const confirmProductDelete = (id) => {
 
   document.getElementById("deleteConfirm").innerHTML =
     `<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">No</button>
-     <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="deleteProduct('${id}')">Yes</button>`;
+     <button type="button" class="btn btn-danger" id="deleteConfirmBtn" onclick="deleteProduct('${id}')">Yes</button>`;
 };
 
 const validateNumberInput = (e) => {
