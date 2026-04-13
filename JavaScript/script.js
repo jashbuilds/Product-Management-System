@@ -18,7 +18,7 @@ const toastContainer = document.getElementById("notificationToast");
 const spinner = document.createElement("span");
 spinner.classList.add("spinner-border", "spinner-border-sm");
 
-const apiUrl = "https://ca4cde9c62f504b152b8.free.beeceptor.com/api/products";
+const apiUrl = "https://ca3d30b9b6c8481d3fa0.free.beeceptor.com/api/products";
 
 let editingId = null;
 let productData = [];
@@ -64,6 +64,13 @@ const generateSkeletons = (count) => {
     .join("");
 };
 
+const tooltipTriggerList = document.querySelectorAll(
+  '[data-bs-toggle="tooltip"]',
+);
+const tooltipList = [...tooltipTriggerList].map(
+  (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl),
+);
+
 // Function to render products from API.
 const renderProducts = () => {
   productGrid.innerHTML = generateSkeletons(8);
@@ -73,34 +80,40 @@ const renderProducts = () => {
     .then((res) => {
       productData = res.data;
 
-      renderActualData();
+      renderProductCards();
 
       if (productData.length === 0) {
         productGrid.innerHTML = `
       <div class="col-12 text-center py-5">
-        <h3 class="text-muted">Inventory Empty</h3>
+        <h3 class="text-muted">No Products Added!</h3>
         <p class="text-muted fs-7">Click the "Add New Product" button above to get started.</p>
       </div>`;
       }
     })
-    .catch(() => showAcknowledgeToast("Error while Rendering Products!", "bg-secondary-red"));
+    .catch(() => {
+      showAcknowledgeToast(
+        "Error while Rendering Products!",
+        "bg-secondary-red",
+      );
+      productGrid.innerHTML = "";
+    });
 };
 
 renderProducts();
 
 // Function to create structure of Products Card
-const renderActualData = () => {
+const renderProductCards = () => {
   productGrid.innerHTML = productData
     .map(
       (product) =>
         `
-       <div class="col-12 col-lg-3 col-md-6">
+       <div class="col-12 col-lg-3 col-md-4 col-sm-6">
           <div class="card productCard bg-white shadow-sm rounded-4 border overflow-hidden h-100">
             
             <div class="card-header bg-transparent py-3 px-4 d-flex justify-content-between align-items-start">
-              <div>
-                <span class="category-badge rounded-5 fw-semibold text-uppercase d-inline-block mb-2">${product.category}</span>
-                <p class="h4 card-title fw-bolder mb-0">${product.name}</p>
+              <div class="overflow-hidden">
+                <span class="category-badge rounded-5 fw-semibold text-uppercase d-inline-block mb-2 ${product.category === "Stationery" ? "theme-accent" : product.category === "Electronics" ? "theme-red" : product.category === "Fitness" ? "theme-indigo" : product.category === "Footwear" ? "theme-sky" : ""}">${product.category}</span>
+                <p class="h4 text-ellipsis card-title cursor-pointer fw-bolder mb-0" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="${product.name}">${product.name}</p>
               </div>
               <button class="btn btn-link p-0 edit-icon" onclick="onEditProduct('${product.id}')" data-bs-toggle="modal" data-bs-target="#addOrEditProductModal">
                 <img src="../Icons/edit-icon.svg" alt="edit" width="20" height="20">
@@ -136,12 +149,20 @@ const renderActualData = () => {
        </div>`,
     )
     .join("");
+
+  const tooltipTriggerList = document.querySelectorAll(
+    '[data-bs-toggle="tooltip"]',
+  );
+
+  [...tooltipTriggerList].map((tooltipTriggerEl) => {
+    new bootstrap.Tooltip(tooltipTriggerEl);
+  });
 };
 
 // Logic to Add or Edit Product.
 const addOrEditProduct = (e) => {
   e.preventDefault();
-  
+
   const modal = bootstrap.Modal.getInstance(addOrUpdateProductModal);
 
   const formObj = {
@@ -231,7 +252,7 @@ const onEditProduct = (id) => {
   submitBtn.textContent = "Update";
 
   const prodId = productData.find((p) => p.id === Number(id));
-  
+
   editingId = id;
 
   productName.value = prodId.name;
