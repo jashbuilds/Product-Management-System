@@ -74,23 +74,30 @@
                         <div class="modal-body p-4">
                             <form id="productForm">
                                 <div class="row g-3">
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <div class="form-floating">
-                                            <input type="number"
-                                                class="form-control rounded-3"
-                                                id="productId" placeholder="ID"
-                                                onkeydown="validateNumberInput(event)"
-                                                oninput="validateFormInput();"
-                                                onKeyPress="if(this.value.length==4) return false;"
-                                                min="0"
+                                            <select
+                                                class="form-select cursor-pointer rounded-3"
+                                                id="productCategory"
+                                                oninput="validateFormInput()"
                                                 required>
-                                            <label for="productId">Product
-                                                ID *</label>
-                                            <div class="invalid-feedback">Enter
-                                                Unique ID!</div>
+                                                <option value disabled
+                                                    selected>Select
+                                                    Category *</option>
+                                                <option
+                                                    value="Electronics">Electronics</option>
+                                                <option
+                                                    value="Stationery">Stationery</option>
+                                                <option
+                                                    value="Footwear">Footwear</option>
+                                                <option
+                                                    value="Fitness">Fitness</option>
+                                            </select>
+                                            <label
+                                                for="productCategory">Category</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-8">
+                                    <div class="col-md-6">
                                         <div class="form-floating">
                                             <input type="text"
                                                 class="form-control rounded-3"
@@ -114,10 +121,11 @@
                                                 oninput="validateFormInput()"
                                                 required></textarea>
                                             <label
-                                                for="productDesc">Description *</label>
+                                                for="productDesc">Description
+                                                *</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <div class="input-group">
                                             <span
                                                 class="input-group-text bg-light rounded-start-3">$</span>
@@ -133,34 +141,13 @@
                                                     min="0"
                                                     required>
                                                 <label
-                                                    for="productPrice">Price *</label>
+                                                    for="productPrice">Price
+                                                    *</label>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="form-floating">
-                                            <select
-                                                class="form-select rounded-3"
-                                                id="productCategory"
-                                                oninput="validateFormInput()"
-                                                required>
-                                                <option value disabled
-                                                    selected>Select
-                                                    Category *</option>
-                                                <option
-                                                    value="Electronics">Electronics</option>
-                                                <option
-                                                    value="Stationery">Stationery</option>
-                                                <option
-                                                    value="Footwear">Footwear</option>
-                                                <option
-                                                    value="Fitness">Fitness</option>
-                                            </select>
-                                            <label
-                                                for="productCategory">Category</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
+
+                                    <div class="col-md-6">
                                         <div class="form-floating">
                                             <input type="number"
                                                 class="form-control rounded-3"
@@ -172,7 +159,8 @@
                                                 min="0"
                                                 required>
                                             <label
-                                                for="productStock">Stock *</label>
+                                                for="productStock">Stock
+                                                *</label>
                                         </div>
                                     </div>
                                 </div>
@@ -226,7 +214,7 @@
             </section>
 
             <!-- Toast Message -->
-            <div class="position-fixed bottom-0 end-0 p-2">
+            <div class="position-fixed bottom-0 start-0 p-2 m-2">
                 <div id="notificationToast"
                     class="toast border-0 w-100 rounded-4 px-2" role="alert"
                     aria-live="assertive"

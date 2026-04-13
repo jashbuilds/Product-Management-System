@@ -1,4 +1,3 @@
-const productId = document.getElementById("productId");
 const productName = document.getElementById("productName");
 const productDesc = document.getElementById("productDesc");
 const productPrice = document.getElementById("productPrice");
@@ -19,10 +18,15 @@ const toastContainer = document.getElementById("notificationToast");
 const spinner = document.createElement("span");
 spinner.classList.add("spinner-border", "spinner-border-sm");
 
-const apiUrl = "https://ca230d94051d953266bc.free.beeceptor.com/api/pms";
+const apiUrl = "https://ca4cde9c62f504b152b8.free.beeceptor.com/api/products";
 
 let editingId = null;
 let productData = [];
+
+// Function to generate Random Product IDs.
+const randomId = () => {
+  return Math.floor(Math.random() * 1000);
+};
 
 // Function to generate Skeleton View.
 const generateSkeletons = (count) => {
@@ -79,7 +83,7 @@ const renderProducts = () => {
       </div>`;
       }
     })
-    .catch((err) => console.log("Error While Rendering Data:", err));
+    .catch(() => showAcknowledgeToast("Error while Rendering Products!", "bg-secondary-red"));
 };
 
 renderProducts();
@@ -137,11 +141,11 @@ const renderActualData = () => {
 // Logic to Add or Edit Product.
 const addOrEditProduct = (e) => {
   e.preventDefault();
-
+  
   const modal = bootstrap.Modal.getInstance(addOrUpdateProductModal);
 
   const formObj = {
-    id: Number(productId.value),
+    id: randomId(),
     name: productName.value,
     description: productDesc.value,
     price: Number(productPrice.value),
@@ -161,12 +165,11 @@ const addOrEditProduct = (e) => {
 
   if (
     editingId === null &&
-    productId.value &&
     productName.value &&
     productDesc.value &&
     productPrice.value &&
     productCategory.value &&
-    productStock.value 
+    productStock.value
   ) {
     axios
       .post(`${apiUrl}`, formObj)
@@ -186,7 +189,6 @@ const addOrEditProduct = (e) => {
         showAcknowledgeToast("Error While Adding Product!", "bg-secondary-red");
       });
   } else if (
-    productId.value &&
     productName.value &&
     productDesc.value &&
     productPrice.value &&
@@ -228,12 +230,10 @@ const onEditProduct = (id) => {
   document.getElementById("formModalLabel").textContent = "Update Product";
   submitBtn.textContent = "Update";
 
-  const numberId = Number(id);
-  const prodId = productData.find((p) => p.id === numberId);
+  const prodId = productData.find((p) => p.id === Number(id));
+  
+  editingId = id;
 
-  editingId = numberId;
-
-  productId.value = prodId.id;
   productName.value = prodId.name;
   productDesc.value = prodId.description;
   productPrice.value = prodId.price;
@@ -308,20 +308,7 @@ const validateName = () => {
 
 // Logic to Validate Form Input fields.
 const validateFormInput = () => {
-  const isDuplicateId = productData.find(
-    (val) => val.id === Number(productId.value) && val.id !== editingId,
-  );
-
-  if (!isDuplicateId) {
-    productId.classList.remove("is-invalid");
-  } else {
-    productId.classList.add("is-invalid");
-    submitBtn.disabled = true;
-  }
-
   const isFormValid =
-    !isDuplicateId &&
-    productId.value.trim() !== "" &&
     productName.value.trim() !== "" &&
     productDesc.value.trim() !== "" &&
     productPrice.value.trim() !== "" &&
@@ -333,7 +320,6 @@ const validateFormInput = () => {
 
 // Logic to Reset Form fields after closing of Modal.
 addOrUpdateProductModal.addEventListener("hidden.bs.modal", () => {
-  productId.value = "";
   productName.value = "";
   productDesc.value = "";
   productPrice.value = "";
@@ -346,7 +332,6 @@ addOrUpdateProductModal.addEventListener("hidden.bs.modal", () => {
   submitBtn.textContent = "Submit";
   submitBtn.disabled = true;
   cancelBtn.disabled = false;
-  productId.classList.remove("is-invalid");
   productName.classList.remove("is-invalid");
   editingId = null;
 });
