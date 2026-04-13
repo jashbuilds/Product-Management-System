@@ -8,17 +8,23 @@ const productStock = document.getElementById("productStock");
 const productGrid = document.getElementById("productGrid");
 const submitBtn = document.getElementById("submitBtn");
 const cancelBtn = document.getElementById("cancelBtn");
-const addOrUpdateProduct = document.getElementById("addOrEditProductModal");
-const deleteConfirmationModal = document.getElementById("deleteConfirmationModal")
+const addOrUpdateProductModal = document.getElementById(
+  "addOrEditProductModal",
+);
+const deleteConfirmationModal = document.getElementById(
+  "deleteConfirmationModal",
+);
+const toastContainer = document.getElementById("notificationToast");
 
 const spinner = document.createElement("span");
 spinner.classList.add("spinner-border", "spinner-border-sm");
 
-const apiUrl = "https://cae7d36194ce589956c4.free.beeceptor.com";
+const apiUrl = "https://ca230d94051d953266bc.free.beeceptor.com/api/pms";
 
 let editingId = null;
 let productData = [];
 
+// Function to generate Skeleton View.
 const generateSkeletons = (count) => {
   return Array(count)
     .fill(0)
@@ -54,11 +60,12 @@ const generateSkeletons = (count) => {
     .join("");
 };
 
+// Function to render products from API.
 const renderProducts = () => {
   productGrid.innerHTML = generateSkeletons(8);
 
   axios
-    .get(`${apiUrl}/api/products`)
+    .get(`${apiUrl}`)
     .then((res) => {
       productData = res.data;
 
@@ -77,6 +84,7 @@ const renderProducts = () => {
 
 renderProducts();
 
+// Function to create structure of Products Card
 const renderActualData = () => {
   productGrid.innerHTML = productData
     .map(
@@ -90,7 +98,7 @@ const renderActualData = () => {
                 <span class="category-badge rounded-5 fw-semibold text-uppercase d-inline-block mb-2">${product.category}</span>
                 <p class="h4 card-title fw-bolder mb-0">${product.name}</p>
               </div>
-              <button class="btn btn-link p-0 edit-icon" onclick="editProduct('${product.id}')" data-bs-toggle="modal" data-bs-target="#addOrEditProductModal">
+              <button class="btn btn-link p-0 edit-icon" onclick="onEditProduct('${product.id}')" data-bs-toggle="modal" data-bs-target="#addOrEditProductModal">
                 <img src="../Icons/edit-icon.svg" alt="edit" width="20" height="20">
               </button>
             </div>
@@ -126,10 +134,11 @@ const renderActualData = () => {
     .join("");
 };
 
-const addProduct = (e) => {
+// Logic to Add or Edit Product.
+const addOrEditProduct = (e) => {
   e.preventDefault();
 
-  const modal = bootstrap.Modal.getInstance(addOrUpdateProduct);
+  const modal = bootstrap.Modal.getInstance(addOrUpdateProductModal);
 
   const formObj = {
     id: Number(productId.value),
@@ -150,9 +159,17 @@ const addProduct = (e) => {
   submitBtn.disabled = true;
   cancelBtn.disabled = true;
 
-  if (editingId === null) {
+  if (
+    editingId === null &&
+    productId.value &&
+    productName.value &&
+    productDesc.value &&
+    productPrice.value &&
+    productCategory.value &&
+    productStock.value 
+  ) {
     axios
-      .post(`${apiUrl}/api/products`, formObj)
+      .post(`${apiUrl}`, formObj)
       .then((res) => {
         productData.push(res.data);
         document.getElementById("productForm").reset();
@@ -160,33 +177,59 @@ const addProduct = (e) => {
 
         submitBtn.removeChild(spinner);
         modal.hide();
+
+        showAcknowledgeToast(`"${formObj.name}" Added!`, "bg-primary");
       })
-      .catch((err) => console.log("Error Adding Product: ", err));
-  } else {
+      .catch(() => {
+        submitBtn.removeChild(spinner);
+        modal.hide();
+        showAcknowledgeToast("Error While Adding Product!", "bg-secondary-red");
+      });
+  } else if (
+    productId.value &&
+    productName.value &&
+    productDesc.value &&
+    productPrice.value &&
+    productCategory.value &&
+    productStock.value
+  ) {
     axios
-      .put(`${apiUrl}/api/products/${editingId}`, formObj)
+      .put(`${apiUrl}/${editingId}`, formObj)
       .then(() => {
         renderProducts();
         submitBtn.removeChild(spinner);
         modal.hide();
+
+        showAcknowledgeToast("Changes Saved.", "bg-primary");
       })
-      .catch((err) => console.log("Error while Editing:", err));
+      .catch(() => {
+        submitBtn.removeChild(spinner);
+        modal.hide();
+        showAcknowledgeToast(
+          "Error While Editing Product!",
+          "bg-secondary-red",
+        );
+      });
     editingId = null;
+  } else {
+    submitBtn.removeChild(spinner);
+    modal.hide();
+
+    showAcknowledgeToast(
+      "Warning! Please Add/Update Appropriate Data.",
+      "bg-secondary-red",
+    );
   }
 };
 
-const editProduct = (id) => {
+// Logic to show prefilled product form.
+const onEditProduct = (id) => {
   document.getElementById("modalHeader").src = "../Images/edit-product.png";
   document.getElementById("formModalLabel").textContent = "Update Product";
   submitBtn.textContent = "Update";
 
   const numberId = Number(id);
   const prodId = productData.find((p) => p.id === numberId);
-
-  if (!prodId) {
-    console.error(`Product with ID ${numberId} not found.`);
-    return;
-  }
 
   editingId = numberId;
 
@@ -200,16 +243,15 @@ const editProduct = (id) => {
   submitBtn.disabled = false;
 };
 
+// Logic to Delete Product.
 const deleteProduct = (id) => {
+  const modal = bootstrap.Modal.getInstance(deleteConfirmationModal);
+  const deleteConfirmBtn = document.getElementById("deleteConfirmBtn");
 
-  const modal = bootstrap.Modal.getInstance(deleteConfirmationModal)
-  const deleteConfirmBtn = document.getElementById("deleteConfirmBtn")
-
-  const numberId = Number(id);
-
-  const prodId = productData.find((p) => p.id === numberId);
+  const prodId = productData.find((p) => p.id === Number(id));
   const productId = prodId.id;
 
+  deleteConfirmBtn.appendChild(spinner);
   deleteConfirmBtn.classList.add(
     "d-flex",
     "justify-content-center",
@@ -220,21 +262,26 @@ const deleteProduct = (id) => {
   cancelBtn.disabled = true;
 
   axios
-    .delete(`${apiUrl}/api/products/${productId}`)
-    .then((res) => {
-      console.log("Data Deleted Successfully: ", res.data);
+    .delete(`${apiUrl}/${productId}`)
+    .then(() => {
       renderProducts();
 
-      deleteConfirmBtn.appendChild(spinner);
-      modal.hide()
+      deleteConfirmBtn.removeChild(spinner);
+      modal.hide();
 
+      showAcknowledgeToast(
+        `"${prodId.name}" Deleted Successfully!`,
+        "bg-primary",
+      );
     })
-    .catch((err) => console.log("Error Deleting Data:", err));
+    .catch(() =>
+      showAcknowledgeToast("Error while deleting Product!", "bg-secondary-red"),
+    );
 };
 
+// Logic for Delete confirmation modal Button.
 const confirmProductDelete = (id) => {
-  const numberId = Number(id);
-  const prodId = productData.find((p) => p.id === numberId);
+  const prodId = productData.find((p) => p.id === Number(id));
 
   document.getElementById("deleteConfirmation").textContent =
     `Are you sure, You want to delete Product '${prodId.name}' ?`;
@@ -244,27 +291,33 @@ const confirmProductDelete = (id) => {
      <button type="button" class="btn btn-danger" id="deleteConfirmBtn" onclick="deleteProduct('${id}')">Yes</button>`;
 };
 
+// Logic to validate Number Inputs.
 const validateNumberInput = (e) => {
   if (e.key === "-" || e.key === "e" || e.key === "+") e.preventDefault();
 };
 
-const validateId = () => {
+// Validate name format (no leading spaces, no numbers)
+const validateName = () => {
+  if (/^\s|\d+/.test(productName.value)) {
+    productName.classList.add("is-invalid");
+    submitBtn.disabled = true;
+  } else {
+    productName.classList.remove("is-invalid");
+  }
+};
+
+// Logic to Validate Form Input fields.
+const validateFormInput = () => {
   const isDuplicateId = productData.find(
-    (val) => val.id === Number(productId.value),
+    (val) => val.id === Number(productId.value) && val.id !== editingId,
   );
 
-  if (!isDuplicateId || productId.value.trim() === "") {
+  if (!isDuplicateId) {
     productId.classList.remove("is-invalid");
   } else {
     productId.classList.add("is-invalid");
     submitBtn.disabled = true;
   }
-};
-
-const validateFormInput = () => {
-  const isDuplicateId = productData.find(
-    (val) => val.id === Number(productId.value) && val.id !== editingId,
-  );
 
   const isFormValid =
     !isDuplicateId &&
@@ -278,7 +331,8 @@ const validateFormInput = () => {
   submitBtn.disabled = !isFormValid;
 };
 
-addOrUpdateProduct.addEventListener("hidden.bs.modal", () => {
+// Logic to Reset Form fields after closing of Modal.
+addOrUpdateProductModal.addEventListener("hidden.bs.modal", () => {
   productId.value = "";
   productName.value = "";
   productDesc.value = "";
@@ -292,5 +346,17 @@ addOrUpdateProduct.addEventListener("hidden.bs.modal", () => {
   submitBtn.textContent = "Submit";
   submitBtn.disabled = true;
   cancelBtn.disabled = false;
+  productId.classList.remove("is-invalid");
+  productName.classList.remove("is-invalid");
   editingId = null;
 });
+
+// Display toast notification.
+const showAcknowledgeToast = (message, bg) => {
+  const toastBody = toastContainer.querySelector(".toast-message");
+  toastContainer.classList.add(bg);
+  toastBody.textContent = message;
+
+  const toast = new bootstrap.Toast(toastContainer);
+  toast.show();
+};

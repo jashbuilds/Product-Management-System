@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Inter:wght@100..900&display=swap');
 
 :root {
@@ -8,9 +7,9 @@
     --light-gray-shadow: rgba(87, 87, 87, 0.1);
     --accent: #14b8a6;
     --secondary-red: #dc3545;
-    --light-red: rgba(220, 53, 69, 0.1); 
+    --light-red: rgba(220, 53, 69, 0.1);
     --primary-indigo: rgba(99, 102, 241, 0.1);
-    
+
     --bg-main: #f1f5f9;
     --text-main: #0f172a;
     --text-muted: #64748b;
@@ -30,7 +29,6 @@
 .mainContent .add-btn {
     background-color: var(--primary);
     padding: 10px 24px;
-    border-radius: 12px;
     transition: all 0.2s ease;
 }
 
@@ -46,8 +44,8 @@
 
 .mainContent .productCard:hover {
     transform: translateY(-3px);
-    box-shadow: 0 10px 15px -3px var(--light-gray-shadow) !important; 
-    border-color: var(--primary) !important; 
+    box-shadow: 0 10px 15px -3px var(--light-gray-shadow) !important;
+    border-color: var(--primary) !important;
 }
 
 .mainContent .productCard .delete-btn-simple {
@@ -88,15 +86,33 @@
     transform: translateY(-2px);
 }
 
-.mainContent .btn-primary-custom {
+.mainContent .btn-submit-custom {
     transition: all 0.2s ease-in-out;
 }
 
-.mainContent .btn-primary-custom:hover {
+.mainContent .btn-submit-custom:hover {
     transform: translateY(-2px);
 }
 
 /* Custom Classes */
-.fs-7 { font-size: 14px; } 
-.cursor-pointer { cursor: pointer; }
-.cursor-wait { cursor: wait !important; }
+.fs-7 {
+    font-size: 14px;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.cursor-wait {
+    cursor: wait !important;
+}
+
+.bg-primary {
+    background: var(--primary) !important;
+    color: var(--bg-main);
+}
+
+.bg-secondary-red {
+    background: var(--secondary-red) !important;
+    color: var(--bg-main);
+}
