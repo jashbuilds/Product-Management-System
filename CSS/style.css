@@ -89,7 +89,6 @@
 
 .mainContent .btn-submit-custom {
     transition: all 0.2s ease-in-out;
-    cursor: no-drop;
 }
 
 .mainContent .btn-submit-custom:hover {
@@ -107,6 +106,11 @@
 
 .cursor-wait {
     cursor: wait !important;
+}
+
+.cursor-nodrop:disabled {
+    cursor: no-drop !important;
+    pointer-events: all !important;
 }
 
 .bg-primary {

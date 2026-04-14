@@ -337,6 +337,7 @@ const validateFormInput = () => {
     productStock.value.trim() !== "";
 
   submitBtn.disabled = !isFormValid;
+  // !isFormValid ? submitBtn.classList.add("cursor-nodrop") : submitBtn.classList.remove("cursor-nodrop")
 };
 
 // Logic to Reset Form fields after closing of Modal.
