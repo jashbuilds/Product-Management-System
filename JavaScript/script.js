@@ -182,7 +182,6 @@ const addOrEditProduct = (e) => {
     "gap-2",
   );
   submitBtn.disabled = true;
-  cancelBtn.disabled = true;
 
   if (
     editingId === null &&
@@ -280,7 +279,6 @@ const deleteProduct = (id) => {
     "gap-2",
   );
   deleteConfirmBtn.disabled = true;
-  cancelBtn.disabled = true;
 
   axios
     .delete(`${apiUrl}/${productId}`)
@@ -353,7 +351,6 @@ addOrUpdateProductModal.addEventListener("hidden.bs.modal", () => {
 
   submitBtn.textContent = "Submit";
   submitBtn.disabled = true;
-  cancelBtn.disabled = false;
   productName.classList.remove("is-invalid");
   editingId = null;
 });
